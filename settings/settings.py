@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'test_task_2.apps.TestTaskConfig',
 ]
 
@@ -77,10 +78,10 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'test_task',
-        'USER': 'saske',
-        'PASSWORD': 'netparola777',
+        'USER': 'test_user',
+        'PASSWORD': 'qwerty123',
     }
 }
 
@@ -121,4 +122,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/static")
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "static/media")
+MEDIA_URL = '/static/media/'
