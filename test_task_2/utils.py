@@ -1,20 +1,17 @@
-import uuid
 import zipfile
 import mapnik
+import os
 
 from django.contrib.gis.utils import LayerMapping
 from django.db.models.signals import pre_save
 
+from settings import settings
 from test_task_2.models import TestFields, Map
 
 
-def make_filepath(instance, filename):
-    new_filename = "%s.%s" % (uuid.uuid4(),
-                             filename.split('.')[-1])
-    return '/'.join([instance.__class__.__name__.lower(), new_filename])
-
-
 def handle_uploaded_file(f, map_name):
+    if not os.path.exists('media'):
+        os.makedirs('media')
     with open('media/SHP.zip', 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
@@ -40,7 +37,11 @@ def map_render(map_id):
     m = mapnik.Map(1920,1080)
     m.background = mapnik.Color('steelblue')
 
-    params = dict(dbname='test_task',table='(select * from test_task_2_testfields where field_id=' + str(map_id) + ') as gay',user='test_user',password='qwerty123')
+    dbname = settings.DATABASES['default']['NAME']
+    user = settings.DATABASES['default']['USER']
+    password = settings.DATABASES['default']['PASSWORD']
+
+    params = dict(dbname=dbname,table='(select * from test_task_2_testfields where field_id=' + str(map_id) + ') as query',user=user,password=password)
     postgis = mapnik.PostGIS(**params)
     lyr = mapnik.Layer('PostGis Layer')
     lyr.datasource = postgis
@@ -100,4 +101,6 @@ def map_render(map_id):
     m.layers.append(lyr)
     m.zoom_all()
 
-    mapnik.render_to_file(m, 'media/Map/map.png', 'png');
+    if not os.path.exists('media/Map'):
+        os.makedirs('media/Map')
+    mapnik.render_to_file(m, 'media/Map/map.png', 'png')
