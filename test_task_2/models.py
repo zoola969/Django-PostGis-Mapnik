@@ -7,6 +7,6 @@ class Map(models.Model):
 
 
 class TestFields(models.Model):
-    mpoly = models.MultiPolygonField(srid=4269)
+    mpoly = models.MultiPolygonField()
     productivi = models.IntegerField()
     field = ForeignKey(Map, on_delete=models.CASCADE, default=1)

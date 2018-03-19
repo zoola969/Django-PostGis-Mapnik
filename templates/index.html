@@ -26,13 +26,37 @@
     <div class="row">
         <div class="col-sm-4 mx-auto">
             <form class="pt-4" enctype="multipart/form-data" action="get_map" method="POST">{% csrf_token %}
-                <div class="form-group">
-                    <label for="file_input">Загрузите архив ESRI Shapefile</label>
-                    <input name="file_field" type="file" class="form-control-file mx-auto" id="file_input">
+                <h2 class="pt-3"> Загрузите свою карту</h2>
+                <div class="form-group pt-3">
+                    <label for="map_name">Введите название вашей карты</label>
+                    <input name="map_name" type="text" class="form-control mx-auto" id="map_name">
+                    <label class="pt-2" for="file_input">Загрузите архив</label>
+                    <input name="file_field" type="file" class="form-control-file mx-auto" id="file_input"
+                           placeholder="Название">
                 </div>
                 <button type="submit" class="btn btn-primary">Получить картинку</button>
             </form>
+            <form class="pt-3" enctype="multipart/form-data" action="search_map" method="POST">{% csrf_token %}
+                <h2> Или найдите уже существующую</h2>
+                <div class="form-group">
+                    <label for="map_search">Поиск по названиею карты</label>
+                    <input name="map_search" type="text" class="form-control mx-auto" id="map_search"
+                           placeholder="Название">
+                    <small id="map_search" class="form-text text-muted">Чтобы увидеть названия всех существующих карт, оставьте поле пустым</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Поиск</button>
+            </form>
         </div>
+        {% if maps %}
+            {% for map in maps %}
+                <div class="col-12 mx-auto text-center">
+                    <span class="mt-2">
+                        <a href="/map/{{ map.id }}"> {{ map.name }}</a>
+                    </span>
+                </div>
+            {% endfor %}
+        {% endif %}
+
     </div>
 
 </div>
